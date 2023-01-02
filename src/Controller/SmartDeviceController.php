@@ -24,7 +24,7 @@ class SmartDeviceController extends AbstractController
     }
 
     #[Route('/api/smart_devices', name: 'smart_devices_list', methods: ['GET'])]
-    public function list(Request $request): JsonResponse
+    public function get(Request $request): JsonResponse
     {
         $smartDevices = $this->smartDeviceRepository->findAll();
 
@@ -36,7 +36,7 @@ class SmartDeviceController extends AbstractController
     }
 
     #[Route('/api/smart_devices', name: 'smart_devices_create', methods: ['POST'])]
-    public function create(Request $request): JsonResponse
+    public function post(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
         if (\json_last_error() !== 0) {
