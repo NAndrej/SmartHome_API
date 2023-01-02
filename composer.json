@@ -11,6 +11,7 @@
         "doctrine/mongodb-odm-bundle": "^4.5",
         "mongodb/mongodb": "^1.15",
         "symfony/console": "6.2.*",
+        "symfony/dependency-injection": "^6.2",
         "symfony/dotenv": "6.2.*",
         "symfony/flex": "^2",
         "symfony/framework-bundle": "6.2.*",
