@@ -15,14 +15,11 @@ class SmartDeviceService
         $this->smartDeviceRepository = $smartDeviceRepository;
     }
 
-    public function upsert(SmartDevice $smartDevice, array $data): SmartDevice
+    public function update(SmartDevice $smartDevice, array $data): SmartDevice
     {
-        //TODO: Refactor when more fields are added. Also include validation
-        if (
-            isset($data['status']) 
-            && is_bool($data['status'])
-        ) {
-            $smartDevice->setStatus($data['status']);
+        if (isset($data['value'])) {
+            $smartDevice->setValue($data['value']);
+            $smartDevice->setValueType(gettype($data['value']));
         }
 
         $this->smartDeviceRepository->save($smartDevice);

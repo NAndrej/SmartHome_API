@@ -20,9 +20,14 @@ class SmartDevice
     protected $name;
 
     /**
-     * @MongoDB\Field(type="boolean")
+     * @MongoDB\Field(type="raw")
      */
-    protected $status;
+    protected $value;
+
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    protected $valueType;
 
     public function getId(): string
     {
@@ -41,16 +46,28 @@ class SmartDevice
         return $this;
     }
     
-    public function setStatus(bool $status): SmartDevice
+    public function getValue()
     {
-        $this->status = $status;
+        return $this->value;
+    }
+
+    public function setValue($value): SmartDevice
+    {
+        $this->value = $value;
 
         return $this;
     }
 
-    public function getStatus(): bool
+    public function getValueType(): string
     {
-        return $this->status;
+        return $this->valueType;
+    }
+
+    public function setValueType(string $valueType): SmartDevice
+    {
+        $this->valueType = $valueType;
+
+        return $this;
     }
 
     public function toArray(): array
@@ -58,7 +75,8 @@ class SmartDevice
         return [
             'id' => $this->getId(),
             'name' => $this->getName(),
-            'status' => $this->getStatus(),
+            'value' => $this->getValue(),
+            'valueType' => $this->getValueType(),
         ];
     }
 }
