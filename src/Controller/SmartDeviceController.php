@@ -44,9 +44,12 @@ class SmartDeviceController extends AbstractController
         }
 
         $name = isset($data['name']) ? strip_tags(trim($data['name'])) : '';
+        $type = isset($data['type']) && in_array($data['type'], ['toggle', 'slider'])
+            ? $data['type'] 
+            : 'toggle';
         $value = isset($data['value']) ? $data['value'] : false;
 
-        $smartDevice = SmartDeviceFactory::createSmartDevice($name, $value);
+        $smartDevice = SmartDeviceFactory::createSmartDevice($name, $type, $value);
         $this->smartDeviceRepository->save($smartDevice);
 
         return new JsonResponse($smartDevice->toArray());

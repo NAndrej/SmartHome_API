@@ -20,6 +20,11 @@ class SmartDevice
     protected $name;
 
     /**
+     * @MongoDB\Field(type="string")
+     */
+    protected $type;
+
+    /**
      * @MongoDB\Field(type="raw")
      */
     protected $value;
@@ -42,6 +47,18 @@ class SmartDevice
     public function setName(string $name): SmartDevice
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): SmartDevice
+    {
+        $this->type = $type;
 
         return $this;
     }
@@ -75,6 +92,7 @@ class SmartDevice
         return [
             'id' => $this->getId(),
             'name' => $this->getName(),
+            'type' => $this->getType(),
             'value' => $this->getValue(),
             'valueType' => $this->getValueType(),
         ];
