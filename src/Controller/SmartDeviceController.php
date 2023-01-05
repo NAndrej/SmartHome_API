@@ -47,9 +47,12 @@ class SmartDeviceController extends AbstractController
         $type = isset($data['type']) && in_array($data['type'], ['toggle', 'slider'])
             ? $data['type'] 
             : 'toggle';
-        $value = isset($data['value']) ? $data['value'] : false;
+        
+        if (!isset($data['value'])) {
+            return new JsonResponse('You must provide an initial value', 400);
+        }
 
-        $smartDevice = SmartDeviceFactory::createSmartDevice($name, $type, $value);
+        $smartDevice = SmartDeviceFactory::createSmartDevice($name, $type, $data['value']);
         $this->smartDeviceRepository->save($smartDevice);
 
         return new JsonResponse($smartDevice->toArray());

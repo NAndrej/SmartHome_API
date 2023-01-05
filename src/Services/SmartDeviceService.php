@@ -18,7 +18,7 @@ class SmartDeviceService
     public function update(SmartDevice $smartDevice, array $data): SmartDevice
     {
         if (isset($data['value'])) {
-            $smartDevice->setValue($data['value']);
+            $smartDevice->setValue($data['value'] === false ? '0' : $data['value']);
             $smartDevice->setValueType(gettype($data['value']));
         }
 

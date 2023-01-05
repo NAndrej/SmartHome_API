@@ -63,12 +63,12 @@ class SmartDevice
         return $this;
     }
     
-    public function getValue()
+    public function getValue(): string
     {
         return $this->value;
     }
 
-    public function setValue($value): SmartDevice
+    public function setValue(string $value): SmartDevice
     {
         $this->value = $value;
 

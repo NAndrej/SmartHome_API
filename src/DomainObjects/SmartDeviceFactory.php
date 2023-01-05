@@ -12,10 +12,10 @@ class SmartDeviceFactory
         $value,
     ): SmartDevice {
         $smartDevice = new SmartDevice();
-        
+
         $smartDevice->setName($name);
         $smartDevice->setType($type);
-        $smartDevice->setValue($value);
+        $smartDevice->setValue($value === false ? '0' : $value);
         $smartDevice->setValueType(gettype($value));
 
         return $smartDevice;
