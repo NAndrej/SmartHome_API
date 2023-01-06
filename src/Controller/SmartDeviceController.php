@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Constants\SmartDeviceConstants;
 use App\Document\SmartDevice;
 use App\DomainObjects\SmartDeviceFactory;
 use App\Repository\SmartDeviceRepository;
@@ -44,9 +45,9 @@ class SmartDeviceController extends AbstractController
         }
 
         $name = isset($data['name']) ? strip_tags(trim($data['name'])) : '';
-        $type = isset($data['type']) && in_array($data['type'], ['toggle', 'slider'])
+        $type = isset($data['type']) && in_array($data['type'], SmartDeviceConstants::$allowedDeviceConstants)
             ? $data['type'] 
-            : 'toggle';
+            : 'light';
         
         if (!isset($data['value'])) {
             return new JsonResponse('You must provide an initial value', 400);
