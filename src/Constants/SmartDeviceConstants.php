@@ -4,7 +4,7 @@ namespace App\Constants;
 
 class SmartDeviceConstants
 {
-    public static $allowedDeviceConstants = [
+    const ALLOWED_DEVICE_TYPES = [
         'light',
         'temperature',
     ];

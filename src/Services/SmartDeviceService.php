@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Document\SmartDevice;
+use App\DomainObjects\SmartDeviceFactory;
+use App\DTO\SmartDeviceDTO;
 use App\Repository\SmartDeviceRepository;
 
 class SmartDeviceService
@@ -13,6 +15,15 @@ class SmartDeviceService
         SmartDeviceRepository $smartDeviceRepository,
     ) {
         $this->smartDeviceRepository = $smartDeviceRepository;
+    }
+
+    public function createFromDTO(SmartDeviceDTO $dto): SmartDevice
+    {
+        $smartDevice = SmartDeviceFactory::createFromDTO($dto);
+
+        $this->smartDeviceRepository->save($smartDevice);
+
+        return $smartDevice;
     }
 
     public function update(SmartDevice $smartDevice, array $data): SmartDevice

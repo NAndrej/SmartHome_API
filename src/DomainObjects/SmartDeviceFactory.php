@@ -3,20 +3,19 @@
 namespace App\DomainObjects;
 
 use App\Document\SmartDevice;
+use App\DTO\SmartDeviceDTO;
 
 class SmartDeviceFactory
 {
-    public static function createSmartDevice(
-        string $name,
-        string $type,
-        $value,
+    public static function createFromDTO(
+        SmartDeviceDTO $dto,
     ): SmartDevice {
         $smartDevice = new SmartDevice();
 
-        $smartDevice->setName($name);
-        $smartDevice->setType($type);
-        $smartDevice->setValue($value === false ? '0' : $value);
-        $smartDevice->setValueType(gettype($value));
+        $smartDevice->setName($dto->name);
+        $smartDevice->setType($dto->type);
+        $smartDevice->setValue($dto->value === false ? '0' : $dto->value);
+        $smartDevice->setValueType(gettype($dto->value));
 
         return $smartDevice;
     }

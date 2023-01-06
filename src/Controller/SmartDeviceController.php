@@ -2,26 +2,39 @@
 
 namespace App\Controller;
 
-use App\Constants\SmartDeviceConstants;
 use App\Document\SmartDevice;
 use App\DomainObjects\SmartDeviceFactory;
+use App\DTO\SmartDeviceDTO;
 use App\Repository\SmartDeviceRepository;
+use App\Services\ApiResponse;
+use App\Services\ApiResponseFactory;
 use App\Services\SmartDeviceService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\{Request, JsonResponse, Response};
+use Symfony\Component\HttpFoundation\{Request, JsonResponse };
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class SmartDeviceController extends AbstractController
 {
     private $smartDeviceRepository;
     private $smartDeviceService;
+    private $serializer;
+    private $validator;
+    private $apiResponseFactory;
 
     public function __construct(
         SmartDeviceRepository $smartDeviceRepository,
         SmartDeviceService $smartDeviceService,
+        SerializerInterface $serializerInterface,
+        ValidatorInterface $validatorInterface,
+        ApiResponseFactory $apiResponseFactory,
     ) {
         $this->smartDeviceRepository = $smartDeviceRepository;
         $this->smartDeviceService = $smartDeviceService;
+        $this->serializer = $serializerInterface;
+        $this->validator = $validatorInterface;
+        $this->apiResponseFactory = $apiResponseFactory;
     }
 
     #[Route('/api/smart_devices', name: 'smart_devices_list', methods: ['GET'])]
@@ -40,21 +53,30 @@ class SmartDeviceController extends AbstractController
     public function post(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-        if (\json_last_error() !== 0) {
-            return new JsonResponse('Bad request', 400);
+        if (
+            !str_contains($request->headers->get('Content-Type'), 'application/json')
+            || json_last_error() !== JSON_ERROR_NONE
+        ) {
+            return $this->apiResponseFactory->createBadRequestResponse('');
         }
 
-        $name = isset($data['name']) ? strip_tags(trim($data['name'])) : '';
-        $type = isset($data['type']) && in_array($data['type'], SmartDeviceConstants::$allowedDeviceConstants)
-            ? $data['type'] 
-            : 'light';
-        
-        if (!isset($data['value'])) {
-            return new JsonResponse('You must provide an initial value', 400);
+        try {
+            $dto = $this->serializer->deserialize(
+                json_encode($data),
+                SmartDeviceDTO::class,
+                'json',
+                ['groups' => 'create']
+            );
+        } catch (\Exception $e) {
+            return $this->apiResponseFactory->createBadRequestResponse('');
         }
 
-        $smartDevice = SmartDeviceFactory::createSmartDevice($name, $type, $data['value']);
-        $this->smartDeviceRepository->save($smartDevice);
+        $validationErrors = $this->validator->validate($dto, null, 'create');
+        if ($formattedValidationErrors = $this->apiResponseFactory->formatConstraintValidationErrors($validationErrors)) {
+            return $this->apiResponseFactory->createValidationErrorResponse($formattedValidationErrors);
+        }
+
+        $smartDevice = $this->smartDeviceService->createFromDTO($dto);
 
         return new JsonResponse($smartDevice->toArray());
     }
