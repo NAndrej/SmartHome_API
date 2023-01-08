@@ -10,20 +10,21 @@ class SmartDeviceDTO
 {
     public $id;
 
-    #[Groups(['create', 'update'])]
-    #[Assert\NotBlank(groups: ['create', 'update'])]
-    #[Assert\Type('string', groups: ['create', 'update'])]
+    #[Groups(['create', 'update', 'update_without_value'])]
+    #[Assert\NotBlank(groups: ['create'])]
+    #[Assert\Type('string', groups: ['create', 'update', 'update_without_value'])]
     public $name;
 
-    #[Groups(['create', 'update'])]
-    #[Assert\NotBlank(groups: ['create', 'update'])]
-    #[Assert\Type('string', groups: ['create', 'update'])]
-    #[Assert\Choice(SmartDeviceConstants::ALLOWED_DEVICE_TYPES,  groups: ['create', 'update'])]
+    #[Groups(['create', 'update', 'update_without_value'])]
+    #[Assert\NotBlank(groups: ['create'])]
+    #[Assert\Type('string', groups: ['create', 'update', 'update_without_value'])]
+    #[Assert\Choice(SmartDeviceConstants::ALLOWED_DEVICE_TYPES,  groups: ['create', 'update', 'update_without_value'])]
     public $type;
 
-    #[Groups(['create', 'update'])]
-    #[Assert\NotBlank(groups: ['create', 'update'])]
+    #[Groups(['create', 'update', 'update_without_value'])]
+    #[Assert\NotBlank(groups: ['create'])]
     #[Assert\Type(type: ['boolean', 'float', 'integer'], groups: ['create', 'update'])]
+    #[Assert\Type(type: ['string'], groups: ['update_without_value'])]
     public $value;
 
     public $valueType;

@@ -2,6 +2,7 @@
 
 namespace App\Document;
 
+use App\DTO\SmartDeviceDTO;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 
 /**
@@ -96,5 +97,21 @@ class SmartDevice
             'value' => $this->getValue(),
             'valueType' => $this->getValueType(),
         ];
+    }
+
+    public function getDTO(): SmartDeviceDTO
+    {
+        $dto = new SmartDeviceDTO();
+
+        $objectProperties = new \ReflectionClass(SmartDevice::class);
+        $objectProperties = array_map(function ($objectPropertyInfo) {
+                return $objectPropertyInfo->name;
+        }, $objectProperties->getProperties());
+        
+        foreach ($objectProperties as $property) {
+            $dto->{$property} = $this->{'get' . ucfirst($property)}();
+        }
+
+        return $dto;
     }
 }

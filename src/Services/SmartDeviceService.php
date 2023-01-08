@@ -6,6 +6,10 @@ use App\Document\SmartDevice;
 use App\DomainObjects\SmartDeviceFactory;
 use App\DTO\SmartDeviceDTO;
 use App\Repository\SmartDeviceRepository;
+use Doctrine\Common\Annotations\AnnotationReader;
+use Symfony\Component\PropertyInfo\Extractor\SerializerExtractor;
+use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
+use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
 
 class SmartDeviceService
 {
@@ -26,11 +30,28 @@ class SmartDeviceService
         return $smartDevice;
     }
 
-    public function update(SmartDevice $smartDevice, array $data): SmartDevice
+    public function updateFromDTO(SmartDevice $smartDevice, SmartDeviceDTO $dto): SmartDevice
     {
-        if (isset($data['value'])) {
-            $smartDevice->setValue($data['value'] === false ? '0' : $data['value']);
-            $smartDevice->setValueType(gettype($data['value']));
+        $serializerClassMetadataFactory = new ClassMetadataFactory(
+            new AnnotationLoader(new AnnotationReader())
+        );
+        $serializerExtractor = new SerializerExtractor($serializerClassMetadataFactory);
+        
+        $properties = $serializerExtractor
+            ->getProperties(SmartDeviceDTO::class, ['serializer_groups' => ['update']]);
+
+        foreach ($properties as $property) {
+            $value = $dto->{$property};
+
+            //TODO: Can be done ValidatorInterface and dynamic validation. Check smfcon
+            if (
+                $property === 'value'
+                && gettype($value) !== $smartDevice->getValueType()
+            ) {
+                continue;
+            }
+
+            $smartDevice->{'set' . ucfirst($property)}($value);
         }
 
         $this->smartDeviceRepository->save($smartDevice);

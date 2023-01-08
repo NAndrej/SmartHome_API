@@ -12,6 +12,7 @@ use App\Services\SmartDeviceService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\{Request, JsonResponse };
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -53,10 +54,7 @@ class SmartDeviceController extends AbstractController
     public function post(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-        if (
-            !str_contains($request->headers->get('Content-Type'), 'application/json')
-            || json_last_error() !== JSON_ERROR_NONE
-        ) {
+        if (json_last_error() !== JSON_ERROR_NONE) {
             return $this->apiResponseFactory->createBadRequestResponse('');
         }
 
@@ -88,18 +86,41 @@ class SmartDeviceController extends AbstractController
             return new JsonResponse('Bad request', 400);
         }
 
+        $data = json_decode($request->getContent(), true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return $this->apiResponseFactory->createBadRequestResponse('');
+        }
+
         $smartDevice = $this->smartDeviceRepository->find($smartDeviceId);
 
         if ($smartDevice === null) {
             return new JsonResponse('The resource does not exist', 400);
         }
 
-        $data = json_decode($request->getContent(), true);
-        if (json_last_error() !== 0) {
-            return new JsonResponse('Bad request', 400);
+        try {
+            $dto = $this->serializer->deserialize(
+                json_encode($data),
+                SmartDeviceDTO::class,
+                'json',
+                [
+                    'groups' => 'update',
+                    AbstractNormalizer::OBJECT_TO_POPULATE => $smartDevice->getDTO(),
+                ]
+            );
+        } catch (\Exception $e) {
+            return $this->apiResponseFactory->createBadRequestResponse('');
         }
 
-        $smartDevice = $this->smartDeviceService->update($smartDevice, $data);
+        if (!isset($data['value'])) {
+            $validationErrors = $this->validator->validate($dto, null, 'update_without_value');
+        } else {
+            $validationErrors = $this->validator->validate($dto, null, 'update');
+        }
+        if ($formattedValidationErrors = $this->apiResponseFactory->formatConstraintValidationErrors($validationErrors)) {
+            return $this->apiResponseFactory->createValidationErrorResponse($formattedValidationErrors);
+        }
+
+        $smartDevice = $this->smartDeviceService->updateFromDTO($smartDevice, $dto);
 
         return new JsonResponse($smartDevice->toArray());
     }
