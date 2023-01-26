@@ -51,6 +51,15 @@ class SmartDeviceService
                 continue;
             }
 
+            if (
+                $property === 'value'
+                && $value === false
+            ) {
+                $smartDevice->setValue('0');
+
+                continue;
+            }
+
             $smartDevice->{'set' . ucfirst($property)}($value);
         }
 
