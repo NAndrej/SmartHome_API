@@ -28,4 +28,8 @@ class SmartDeviceDTO
     public $value;
 
     public $valueType;
+
+    #[Groups(['create', 'update', 'update_without_value'])]
+    #[Assert\Type('boolean', groups: ['update', 'update_without_value'])]
+    public $status;
 }

@@ -35,6 +35,11 @@ class SmartDevice
      */
     protected $valueType;
 
+    /**
+     * @MongoDB\Field(type="boolean")
+     */
+    protected $status;
+
     public function getId(): string
     {
         return $this->id;
@@ -88,6 +93,18 @@ class SmartDevice
         return $this;
     }
 
+    public function getStatus(): ?bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?bool $status = null): SmartDevice
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
     public function toArray(): array
     {
         return [
@@ -96,6 +113,7 @@ class SmartDevice
             'type' => $this->getType(),
             'value' => $this->getValue(),
             'valueType' => $this->getValueType(),
+            'status' => $this->getStatus(),
         ];
     }
 

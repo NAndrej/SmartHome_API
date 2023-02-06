@@ -68,7 +68,7 @@ class SmartDeviceController extends AbstractController
         } catch (\Exception $e) {
             return $this->apiResponseFactory->createBadRequestResponse('');
         }
-
+    
         $validationErrors = $this->validator->validate($dto, null, 'create');
         if ($formattedValidationErrors = $this->apiResponseFactory->formatConstraintValidationErrors($validationErrors)) {
             return $this->apiResponseFactory->createValidationErrorResponse($formattedValidationErrors);
