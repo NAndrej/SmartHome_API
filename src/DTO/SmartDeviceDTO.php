@@ -21,6 +21,11 @@ class SmartDeviceDTO
     #[Assert\Choice(SmartDeviceConstants::ALLOWED_DEVICE_TYPES,  groups: ['create', 'update', 'update_without_value'])]
     public $type;
 
+    #[Groups(['create'])]
+    #[Assert\Type('string', groups: ['create'])]
+    #[Assert\Choice(SmartDeviceConstants::ALLOWED_DEVICE_CATEGORY,  groups: ['create'])]
+    public $category;
+
     #[Groups(['create', 'update', 'update_without_value'])]
     #[Assert\NotBlank(groups: ['create'])]
     #[Assert\Type(type: ['boolean', 'float', 'integer'], groups: ['create', 'update'])]

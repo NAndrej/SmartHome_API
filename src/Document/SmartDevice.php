@@ -26,6 +26,11 @@ class SmartDevice
     protected $type;
 
     /**
+     * @MongoDB\Field(type="string")
+     */
+    protected $category;
+
+    /**
      * @MongoDB\Field(type="raw")
      */
     protected $value;
@@ -70,6 +75,18 @@ class SmartDevice
     public function setType(string $type): SmartDevice
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getCategory(): string
+    {
+        return $this->category;
+    }
+
+    public function setCategory(string $category): SmartDevice
+    {
+        $this->category = $category;
 
         return $this;
     }
@@ -128,6 +145,7 @@ class SmartDevice
             'id' => $this->getId(),
             'name' => $this->getName(),
             'type' => $this->getType(),
+            'category' => $this->getCategory(),
             'value' => $this->getValue(),
             'valueType' => $this->getValueType(),
             'status' => $this->getStatus(),

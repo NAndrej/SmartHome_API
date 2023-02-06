@@ -17,6 +17,7 @@ class SmartDeviceFactory
         $smartDevice->setValue($dto->value === false ? '0' : $dto->value);
         $smartDevice->setValueType(gettype($dto->value));
         $smartDevice->setStatus($dto->status);
+        $smartDevice->setCategory($dto->category);
 
         return $smartDevice;
     }
