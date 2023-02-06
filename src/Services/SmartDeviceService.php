@@ -45,8 +45,14 @@ class SmartDeviceService
 
             //TODO: Can be done ValidatorInterface and dynamic validation. Check smfcon
             if (
-                $property === 'value'
-                && gettype($value) !== $smartDevice->getValueType()
+                (
+                    $property === 'value'
+                    && gettype($value) !== $smartDevice->getValueType()
+                )
+                || (
+                    $property === 'measuredValue'
+                    && gettype($value) !== $smartDevice->getValueType()
+                )
             ) {
                 continue;
             }

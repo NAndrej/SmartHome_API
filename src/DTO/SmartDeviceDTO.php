@@ -32,4 +32,8 @@ class SmartDeviceDTO
     #[Groups(['create', 'update', 'update_without_value'])]
     #[Assert\Type('boolean', groups: ['update', 'update_without_value'])]
     public $status;
+
+    #[Groups(['create', 'update', 'update_without_value'])]
+    #[Assert\Type('string', groups: ['update', 'update_without_value'])]
+    public $measuredValue;
 }

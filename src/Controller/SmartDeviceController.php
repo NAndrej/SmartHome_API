@@ -91,6 +91,7 @@ class SmartDeviceController extends AbstractController
             return $this->apiResponseFactory->createBadRequestResponse('');
         }
 
+        /** @var SmartDevice $smartDevice */
         $smartDevice = $this->smartDeviceRepository->find($smartDeviceId);
 
         if ($smartDevice === null) {

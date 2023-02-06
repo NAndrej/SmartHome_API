@@ -39,6 +39,11 @@ class SmartDevice
      * @MongoDB\Field(type="boolean")
      */
     protected $status;
+    
+    /**
+     * @MongoDB\Field(type="raw")
+     */
+    protected $measuredValue;
 
     public function getId(): string
     {
@@ -93,6 +98,18 @@ class SmartDevice
         return $this;
     }
 
+    public function getMeasuredValue(): ?string
+    {
+        return $this->measuredValue;
+    }
+
+    public function setMeasuredValue(?string $measuredValue = null): SmartDevice
+    {
+        $this->measuredValue = $measuredValue;
+
+        return $this;
+    }
+
     public function getStatus(): ?bool
     {
         return $this->status;
@@ -114,6 +131,7 @@ class SmartDevice
             'value' => $this->getValue(),
             'valueType' => $this->getValueType(),
             'status' => $this->getStatus(),
+            'measuredValue' => $this->getMeasuredValue(),
         ];
     }
 
@@ -125,7 +143,7 @@ class SmartDevice
         $objectProperties = array_map(function ($objectPropertyInfo) {
                 return $objectPropertyInfo->name;
         }, $objectProperties->getProperties());
-        
+
         foreach ($objectProperties as $property) {
             $dto->{$property} = $this->{'get' . ucfirst($property)}();
         }
