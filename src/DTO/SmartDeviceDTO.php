@@ -6,6 +6,18 @@ use App\Constants\SmartDeviceConstants;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * Data Transfer Object za klasata SmartDevice
+ * Sluzhi za validacija na vrednostite pred da se dodelat na nekoj SmartDevice objekt, so cel nikogash da nemame nevalidni podatoci vo baza.
+ * 
+ * Validacijata se izvrshuva so razlichni asserti.
+ * Assert\Type sluzhi za validacija deka podatokot e od nekoj tip.
+ * Assert\Choice sluzhi za validacija deka podatokot e nekoj od dozvolenite vrednosti.
+ * Assert\NotBlank sluzhi za validacija deka podatokot ne e null ili prazen string.
+ * 
+ * Groups sluzhi za dodeluvanje na grupa na property-to.
+ * Sluzhi za podelba na properties vo povekje grupi, so cel polesno manipuliranje vo deserializacijata i serializacijata. 
+ */
 class SmartDeviceDTO
 {
     public $id;

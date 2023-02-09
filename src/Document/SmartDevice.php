@@ -6,6 +6,11 @@ use App\DTO\SmartDeviceDTO;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 
 /**
+ * Strukturata na dokumentot koj bi se zapishal vo mongo. Sekoj zapis koj sakame da go zapishime vo SmartDevice kolekcijata, mora da bide objekt od ovaa klasa. 
+ * Vo prodolzhenie se navedeni site polinja koi mozhe da gi sodrzhi eden dokument vo kolekcijata vo mongo.
+ */
+
+/**
  * @MongoDB\Document
  */
 class SmartDevice
@@ -49,7 +54,10 @@ class SmartDevice
      * @MongoDB\Field(type="raw")
      */
     protected $measuredValue;
-
+    
+    /**
+     * Sekcija so geteri i seteri za pristap do privatnite polinja
+     */
     public function getId(): string
     {
         return $this->id;
@@ -139,6 +147,9 @@ class SmartDevice
         return $this;
     }
 
+    /**
+     * Konvertira objekt od SmartDevice vo asocijativna niza kade kluchevi se iminjata na polinjata, a vrednosti se vrednostite na polinjata
+     */
     public function toArray(): array
     {
         return [
@@ -153,6 +164,10 @@ class SmartDevice
         ];
     }
 
+    /**
+     * Kreira DTO (Data Transfer Object) od objekt od klasata SmartDevice.
+     * DTO-to se koristi za validacija na ispratenite podatoci pri opsluzhuvanje na requestot za izmena na dokument vo mongo
+     */
     public function getDTO(): SmartDeviceDTO
     {
         $dto = new SmartDeviceDTO();

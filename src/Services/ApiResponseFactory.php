@@ -5,6 +5,10 @@ namespace App\Services;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
+/**
+ * Klasa koja sluzhi kako factory, i gi kreira i formatira potrebnite JsonResponse objekti.
+ * Se koristi vo SmartDeviceController koga sakame da vratime nekakov response.
+ */
 class ApiResponseFactory
 {
     public function createBadRequestResponse(string $path): JsonResponse

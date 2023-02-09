@@ -2,6 +2,9 @@
 
 namespace App\Constants;
 
+/**
+ * Konstanti koi gi sodrzhat dozvolenite vrednosti za polinjata vo objektot SmartDevice.
+ */
 class SmartDeviceConstants
 {
     const ALLOWED_DEVICE_TYPES = [
