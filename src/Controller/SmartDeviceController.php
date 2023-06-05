@@ -122,10 +122,16 @@ class SmartDeviceController extends AbstractController
             return $this->apiResponseFactory->createValidationErrorResponse($formattedValidationErrors);
         }
 
+        $businessLogicValidationStatus = $this->smartDeviceService->executeBusinessLogicValidation($smartDevice, $data);
+        
+        if (!$businessLogicValidationStatus) {
+            return new JsonResponse('Bad request from business logic', 400);
+        }
+
         // Izmena na zapisot vo baza.
         $smartDevice = $this->smartDeviceService->updateFromDTO($smartDevice, $dto);
 
         // Requestot e uspeshen, se vrakja izmenetiot zapis nazad.
         return new JsonResponse($smartDevice->toArray());
     }
-}
+}   

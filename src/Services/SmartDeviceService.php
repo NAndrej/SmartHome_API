@@ -81,4 +81,37 @@ class SmartDeviceService
         
         return $smartDevice;
     }
+
+    public function executeBusinessLogicValidation(SmartDevice $smartDevice, array $data): bool
+    {
+        if (
+            $smartDevice->getName() === 'Alarm Status'
+            && isset($data['value'])
+            && $data['value'] === true
+        ) {
+            /** @var SmartDevice $alarmControlDevice */
+            $alarmControlDevice = $this->smartDeviceRepository->findOneBy(['name' => 'Alarm Control']);
+
+            if ($alarmControlDevice->getValue() === '0') {
+                return false;
+            }
+        }
+
+        if (
+            $smartDevice->getName() === 'Alarm Control'
+            && isset($data['value'])
+            && $data['value'] === false
+        ) {
+            /** @var SmartDevice $alarmStatusDevice */
+            $alarmStatusDevice = $this->smartDeviceRepository->findOneBy(['name' => 'Alarm Status']);
+
+            if ($alarmStatusDevice->getValue() === '1') {
+                $alarmStatusDevice->setValue('0');
+
+                $this->smartDeviceRepository->save($alarmStatusDevice);
+            }
+        }
+
+        return true;
+    }
 }

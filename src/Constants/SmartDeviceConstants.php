@@ -11,6 +11,7 @@ class SmartDeviceConstants
         'light',
         'temperature',
         'blinds',
+        'alarm',
     ];
 
     const ALLOWED_DEVICE_CATEGORY = [
